@@ -8,7 +8,7 @@ const todos = [
 // prettier-ignore
 const render = todos =>
   todos.map(({ id, content, completed }) =>
-      `<li id=${id}>
+      `<li id="${id}">
         <label><input type="checkbox" ${completed ? 'checked' : ''}>${content}</label>
       </li>`
     ).join('');
