@@ -18,3 +18,4 @@ console.log(toggleCompletedAll(todos));
   { id: 1, content: 'Javascript', completed: true }
 ]
 */
+export default toggleCompletedAll;

@@ -10,3 +10,5 @@ const getValues = (todos, key) => todos.map(todo => todo[key]);
 console.log(getValues(todos, 'id')); // [3, 2, 1]
 console.log(getValues(todos, 'content')); // ['HTML', 'CSS', 'Javascript']
 console.log(getValues(todos, 'completed')); // [false, true, false]
+
+export default getValues;

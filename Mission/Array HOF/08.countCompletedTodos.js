@@ -7,3 +7,5 @@ const todos = [
 const countCompletedTodos = todos => todos.filter(todo => todo.completed).length;
 
 console.log(countCompletedTodos(todos)); // 1
+
+export default countCompletedTodos;

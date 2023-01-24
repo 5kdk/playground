@@ -8,3 +8,5 @@ const getMaxId = todos => (todos.length ? Math.max(...todos.map(todo => todo.id)
 
 console.log(getMaxId(todos)); // 3
 console.log(getMaxId([])); // 0
+
+export default getMaxId;

@@ -18,3 +18,5 @@ console.log(toggleCompletedById(todos, 2));
   { id: 1, content: 'Javascript', completed: false }
 ]
 */
+
+export default toggleCompletedById;

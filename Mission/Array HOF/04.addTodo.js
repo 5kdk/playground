@@ -15,3 +15,5 @@ console.log(addTodo(todos, { id: 4, content: 'Test', completed: false }));
   { id: 1, content: 'Javascript', completed: false }
 ]
 */
+
+export default addTodo;

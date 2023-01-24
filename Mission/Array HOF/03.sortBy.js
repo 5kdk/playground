@@ -41,3 +41,5 @@ console.log(todos === sortedTodos3);
 ]
 false
 */
+
+export default sortBy;
