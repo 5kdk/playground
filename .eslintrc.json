@@ -6,7 +6,8 @@
     "browser": true,
     "node": true,
     "commonjs": true,
-    "es2022": true
+    "es2022": true,
+    "jest": true
   },
   "globals": { "_": true },
   "plugins": ["import", "html"],
