@@ -16,3 +16,5 @@ console.log(getLastDateOfMonth(2021, 0)); // 31
 
 // 2021년 2월의 마지막 날은 28일
 console.log(getLastDateOfMonth(2021, 1)); // 28
+
+export default getLastDateOfMonth;

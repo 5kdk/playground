@@ -7,3 +7,5 @@ const getDay = dateString => {
 console.log(getDay('2021/07/24')); // '토요일'
 console.log(getDay('2021-07-25')); // '일요일'
 console.log(getDay('2021/07/26')); // '월요일'
+
+export default getDay;

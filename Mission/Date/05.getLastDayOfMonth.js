@@ -6,3 +6,5 @@ console.log(getLastDayOfMonth(2022, 3)); // 6
 
 // 2022년 7월 말일은 일요일
 console.log(getLastDayOfMonth(2022, 6)); // 0
+
+export default getLastDayOfMonth;

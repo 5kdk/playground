@@ -6,3 +6,5 @@ console.log(getFirstDayOfMonth(2022, 0)); // 6
 
 // 2022년 5월 1일은 일요일
 console.log(getFirstDayOfMonth(2022, 4)); // 0
+
+export default getFirstDayOfMonth;
