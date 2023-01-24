@@ -1,19 +1,32 @@
 class Queue {
   #elements = [];
 
-  constructor(elements = []) {
-    if (!Array.isArray(elements)) {
-      throw new TypeError('Not an array!');
-    }
-    this.#elements = [...elements];
-  }
+  #size = 0;
 
-  static from(elements) {
+  constructor(elements = []) {
     if (!Array.isArray(elements)) {
       throw new TypeError(`${elements} is not an array`);
     }
+    this.#elements = [...elements];
+    this.#size = elements.length;
+  }
 
-    return Queue(elements);
+  [Symbol.iterator]() {
+    const that = this;
+    that.#size = -1;
+    return {
+      next() {
+        that.#size += 1;
+        return { value: that.#elements[that.#size], done: that.#size >= that.#elements.length };
+      },
+    };
+  }
+
+  static from(elements = []) {
+    if (!Array.isArray(elements)) {
+      throw new TypeError(`${elements} is not an array`);
+    }
+    return new Queue(elements);
   }
 
   static of(...elements) {
@@ -21,31 +34,40 @@ class Queue {
   }
 
   get size() {
-    return this.#elements.length;
+    return this.#size;
   }
 
   enqueue(element) {
-    return this.#elements.push(element);
+    if (arguments.length) {
+      this.#elements.push(element);
+      this.#size += arguments.length;
+    }
+    return this;
   }
 
   dequeue() {
-    return this.#elements.shift();
+    this.#elements.shift();
+    this.#size -= 1;
+    return this;
   }
 
   peek() {
+    if (this.isEmpty()) return null;
     return this.#elements[0];
   }
 
   isEmpty() {
-    return !this.#elements.length
+    return this.#size === 0;
   }
 
   clone() {
-    
+    return new Queue(this.#elements);
   }
-  
-  entries() {
-    return [...this.#elements];
+
+  clear() {
+    this.#elements = [];
+    this.#size = 0;
+    return this;
   }
 }
 
