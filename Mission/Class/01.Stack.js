@@ -1,31 +1,17 @@
 class Stack {
   #elements = [];
 
-  #size = 0;
-
   constructor(elements = []) {
-    if (!Array.isArray(elements)) {
-      throw new TypeError(`${elements} is not an array`);
-    }
+    if (!Array.isArray(elements)) throw new TypeError(`${elements} is not an array`);
+
     this.#elements = [...elements];
-    this.#size = elements.length;
   }
 
   [Symbol.iterator]() {
-    const that = this;
-    that.#size = -1;
-    return {
-      next() {
-        that.#size += 1;
-        return { value: that.#elements[that.#size], done: that.#size >= that.#elements.length };
-      },
-    };
+    return this.#elements[Symbol.iterator]();
   }
 
-  static from(elements = []) {
-    if (!Array.isArray(elements)) {
-      throw new TypeError(`${elements} is not an array`);
-    }
+  static from(elements) {
     return new Stack(elements);
   }
 
@@ -34,30 +20,25 @@ class Stack {
   }
 
   get size() {
-    return this.#size
+    return this.#elements.length;
   }
 
   push(element) {
-    if (arguments.length) {
-      this.#elements.push(element);
-      this.#size += arguments.length;
-    }
+    if (arguments.length) this.#elements.push(element);
     return this;
   }
 
   pop() {
     this.#elements.pop();
-    this.#size -= 1;
     return this;
   }
 
   peek() {
-    if (this.isEmpty()) return null;
-    return this.#elements[this.#size - 1];
+    return this.isEmpty() ? null : this.#elements.at(-1);
   }
 
   isEmpty() {
-    return this.#size === 0;
+    return this.size === 0;
   }
 
   clone() {
@@ -66,7 +47,6 @@ class Stack {
 
   clear() {
     this.#elements = [];
-    this.#size = 0;
     return this;
   }
 }
