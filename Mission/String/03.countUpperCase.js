@@ -1,5 +1,5 @@
 /** @type {(str: string) => number} */
-const countUpperCase = str => str.match(/[A-Z]/g).length;
+const countUpperCase = str => (str.match(/[A-Z]/g) ?? []).length;
 
 countUpperCase('KoreaTimeGood'); // => 3
 
