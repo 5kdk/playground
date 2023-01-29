@@ -1,24 +1,27 @@
-const get = query => document.querySelector(`${query}`);
+const getDOM = selector => document.querySelector(`${selector}`);
 
-const $form = get('.todo-form');
-const $todoList = get('.todo-list');
-const $todoInput = get('.todo-input');
+const $form = getDOM('.todo-form');
+const $todoList = getDOM('.todo-list');
+const $todoInput = getDOM('.todo-input');
 
-$form.addEventListener('submit', e => {
+const inputChecker = $todoInput => $todoInput.value.trim().replace(/</g, '&lt').replace(/>/g, '&gt');
+
+const addTodo = e => {
   e.preventDefault();
-  const value = $todoInput.value.trim();
-
-  if (value === '') return;
-
+  const value = inputChecker($todoInput);
+  if (!value) return;
   $todoInput.value = '';
-
-  // prettier-ignore
-  $todoList.innerHTML =
+  $todoInput.focus();
+  $todoList.insertAdjacentHTML(
+    'afterbegin',
     `
     <li>
       <input type="checkbox" />
       <span>${value}</span>
       <button>X</button>
     </li>
-    ` + $todoList.innerHTML;
-});
+    `
+  );
+};
+
+$form.addEventListener('submit', addTodo);
