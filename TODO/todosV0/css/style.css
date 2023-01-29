@@ -1,1 +1,3 @@
-input[type='check-box']
+input[type='checkbox']:checked + span {
+  text-decoration: line-through;
+}
