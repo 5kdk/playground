@@ -54,7 +54,7 @@
     <script>
       const getDOM = selector => document.querySelector(`${selector}`);
 
-      const $todoInput = getDOM('.todo-input');
+      const $todoInput = getDOM('.new-todo');
       const $todoList = getDOM('.todo-list');
       const $todoFilters = getDOM('.todo-filters');
 
@@ -100,7 +100,6 @@
 
         const content = $todoInput.value.trim();
         $todoInput.value = '';
-
         if (!content) return;
         $todoInput.focus();
 
@@ -125,6 +124,7 @@
 
       const filterToDo = ({ target }) => {
         if (!target.matches('li')) return;
+
         getDOM('.active').classList.remove('active');
         target.classList.add('active');
 
