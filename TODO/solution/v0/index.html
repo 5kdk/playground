@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todos v0</title>
+    <style>
+      .todo-list {
+        padding: 0;
+        list-style-type: none;
+      }
+      .todo-list > li > span {
+        display: inline-block;
+        width: 100px;
+      }
+      .todo-list > li > input[type='checkbox']:checked + span {
+        text-decoration: line-through;
+      }
+      .todo-filters {
+        display: flex;
+        gap: 15px;
+        padding: 0;
+        list-style-type: none;
+      }
+      .active {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" class="todo-input" placeholder="Enter todo!" />
+    <ul class="todo-list">
+      <!-- <li id="3">
+        <input type="checkbox" />
+        <span>Javascript</span>
+        <button class="todo-remove">X</button>
+      </li>
+      <li id="2">
+        <input type="checkbox" checked />
+        <span>CSS</span>
+        <button class="todo-remove">X</button>
+      </li>
+      <li id="1">
+        <input type="checkbox" />
+        <span>HTML</span>
+        <button class="todo-remove">X</button>
+      </li> -->
+    </ul>
+
+    <ul class="todo-filters">
+      <li id="all" class="active">All</li>
+      <li id="completed">Completed</li>
+      <li id="active">Active</li>
+    </ul>
+    <script>
+      const $todoInput = document.querySelector('.todo-input');
+      const $todoList = document.querySelector('.todo-list');
+      const $todoFilters = document.querySelector('.todo-filters');
+
+      // mock data
+      const todos = [
+        { id: 3, content: 'Javascript', completed: false },
+        { id: 2, content: 'CSS', completed: true },
+        { id: 1, content: 'HTML', completed: false },
+      ];
+
+      // Event handlers
+      window.addEventListener('DOMContentLoaded', () => {
+        // prettier-ignore
+        $todoList.innerHTML = todos.map(({ id, content, completed }) => `
+          <li id="${id}">
+            <input type="checkbox" ${completed ? 'checked' : ''}>
+            <span>${content}</span>
+            <button class="todo-remove">X</button>
+          </li>`).join('');
+      });
+
+      $todoInput.addEventListener('keyup', e => {
+        const content = $todoInput.value.trim();
+        if (e.key !== 'Enter' || content === '') return;
+
+        // prettier-ignore
+        $todoList.innerHTML = `
+          <li>
+            <input type="checkbox">
+            <span>${content}</span>
+            <button class="todo-remove">X</button>
+          </li>` + $todoList.innerHTML;
+
+        $todoInput.value = '';
+      });
+
+      // $todoList.addEventListener('change', e => {
+      //   e.target.nextElementSibling.style.textDecoration = e.target.checked ? 'line-through' : 'none';
+      // });
+
+      $todoList.addEventListener('click', e => {
+        if (!e.target.matches('.todo-remove')) return;
+        e.target.parentNode.remove();
+      });
+
+      $todoFilters.addEventListener('click', e => {
+        if (e.target === $todoFilters) return;
+
+        [...$todoFilters.children].forEach($filter => $filter.classList.toggle('active', $filter === e.target));
+
+        const { id } = e.target; // all | completed | active
+
+        [...$todoList.children].forEach($todoItem => {
+          const { checked } = $todoItem.firstElementChild;
+
+          // if (id === 'all') $todoItem.style.display = 'block';
+          // else if (id === 'completed') $todoItem.style.display = checked ? 'block' : 'none';
+          // else if (id === 'active') $todoItem.style.display = checked ? 'none' : 'block';
+
+          $todoItem.style.display =
+            id === 'all' || (id === 'completed' && checked) || (id === 'active' && !checked) ? 'block' : 'none';
+        });
+      });
+    </script>
+  </body>
+</html>
