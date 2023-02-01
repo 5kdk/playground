@@ -1,5 +1,7 @@
+// query selector
 const getDOM = selector => document.querySelector(`${selector}`);
 
+// DOMs
 const $main = getDOM('.main');
 const $toggleAll = getDOM('.toggle-all');
 const $newInput = getDOM('.new-todo');
@@ -10,12 +12,14 @@ const $footer = getDOM('.footer');
 const $clearBtn = getDOM('.clear-completed');
 const $edits = document.getElementsByClassName('edit');
 
+// state
 let state = {
   todos: [],
   editingTodos: [],
   filterId: 'all',
 };
 
+// render todos
 const renderToDos = () => {
   console.log('State', state);
 
@@ -42,13 +46,16 @@ const renderToDos = () => {
   $clearBtn.classList.toggle('hidden', !todos.some(todo => todo.completed === true));
 };
 
+// set state
 const setState = newState => {
   state = { ...state, ...newState };
   renderToDos();
 };
 
+// gernerate id
 const generateId = () => Math.max(...state.todos.map(({ id }) => id), 0) + 1;
 
+// get todo
 const getTodos = () => {
   setState({
     todos: [
@@ -85,9 +92,6 @@ const removeTodo = ({ target }) => {
 const filterTodo = ({ target }) => {
   if (!target.matches('.filters > li > a')) return;
 
-  getDOM('.selected').classList.remove('selected');
-  target.classList.add('selected');
-
   setState({ filterId: target.id });
 };
 
@@ -118,7 +122,7 @@ const editTodo = ({ target }) => {
   if (state.editingTodos.includes(id)) return;
 
   const { todos, editingTodos } = state;
-  const newContents = [...$edits].map($edit => $edit.value.trim());
+  const newContents = [...$edits].map(edit => edit.value.trim());
 
   setState({
     todos: todos.map((todo, idx) => ({ ...todo, content: newContents[idx] })),
@@ -131,10 +135,8 @@ const renewTodo = ({ target, key }) => {
   if (key !== 'Enter' || !target.classList.contains('edit')) return;
 
   const { id } = target.closest('li').dataset;
-
   const { todos, editingTodos } = state;
-
-  const newContents = [...$edits].map($edit => $edit.value.trim());
+  const newContents = [...$edits].map(edit => edit.value.trim());
 
   setState({
     todos: todos.map((todo, idx) => ({ ...todo, content: newContents[idx] })),
@@ -142,8 +144,12 @@ const renewTodo = ({ target, key }) => {
   });
 };
 
+// clear completed todos
 const clearCompletedTodos = () =>
-  setState({ todos: state.todos.filter(todo => todo.completed === false), editingTodos: [] });
+  setState({
+    todos: state.todos.filter(todo => todo.completed === false),
+    editingTodos: [],
+  });
 
 window.addEventListener('DOMContentLoaded', getTodos);
 $newInput.addEventListener('keyup', addTodo);
