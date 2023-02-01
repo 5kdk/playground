@@ -11,66 +11,87 @@ const $clearBtn = getDOM('.clear-completed');
 
 let state = {
   todos: [],
+  editingTodos: [],
   filterId: 'all',
 };
 
-const getToDos = () => [
-  { id: 3, content: 'Javascript', completed: false },
-  { id: 2, content: 'CSS', completed: true },
-  { id: 1, content: 'HTML', completed: false },
-];
-
 const renderToDos = () => {
-  const { todos, filterId } = state;
+  console.log('State', state);
 
-  const _todos = todos.filter(todo =>
-    filterId === 'completed' ? todo.completed : filterId === 'active' ? !todo.completed : todo
+  const { todos, editingTodos, filterId } = state;
+
+  const _todos = todos.filter(({ completed }) =>
+    filterId === 'completed' ? completed : filterId === 'active' ? !completed : true
   );
 
-  $todoList.innerHTML = _todos
-    .map(
-      ({ id, content, completed }) => `
-        <li data-id="${id}"">
-          <div class="view">
-            <input type="checkbox" class="toggle" ${completed ? 'checked' : ''}/>
-            <label>${content}</label>
-            <button class="destroy"></button>
-          </div>
-          <input class="edit" value="${content}" />
-        </li>
-      `
-    )
-    .join('');
+  // prettier-ignore
+  $todoList.innerHTML = _todos.map(({ id, content, completed }) => `
+    <li data-id="${id}" class="${editingTodos.includes(id) ? 'editing' : ''}">
+      <div class="view">
+        <input type="checkbox" class="toggle" ${completed ? 'checked' : ''}/>
+        <label>${content}</label>
+        <button class="destroy"></button>
+      </div>
+      <input class="edit" value="${content}" />
+    </li>`).join('');
 
-  $main.classList.toggle('hidden', !todos.length);
-
-  $footer.classList.toggle('hidden', !todos.length);
-
-  $todoCnt.textContent = `${todos.filter(todo => todo.completed === false).length} item left`;
-
+  const todoNum = todos.filter(todo => !todo.completed).length;
+  $todoCnt.textContent = `${todoNum} item${todoNum > 1 ? 's' : ''} left`;
+  [$main, $footer].forEach($ele => $ele.classList.toggle('hidden', !todos.length));
   $clearBtn.classList.toggle('hidden', !todos.some(todo => todo.completed === true));
 };
 
 const setState = newState => {
   state = { ...state, ...newState };
-  console.log('state', state);
   renderToDos();
 };
 
 const generateId = () => Math.max(...state.todos.map(({ id }) => id), 0) + 1;
 
-const addToDo = ({ target, key }) => {
+const getTodos = () => {
+  setState({
+    todos: [
+      { id: 3, content: 'Javascript', completed: false },
+      { id: 2, content: 'CSS', completed: true },
+      { id: 1, content: 'HTML', completed: false },
+    ],
+  });
+};
+
+// add todo
+const addTodo = ({ target, key }) => {
   if (key !== 'Enter') return;
 
   const content = target.value.trim();
-  target.value = '';
-  if (!content) return;
   target.focus();
+  target.value = '';
 
-  setState({ todos: [{ id: generateId(), content, completed: false }, ...state.todos] });
+  const newTodo = { id: generateId(), content, completed: false };
+
+  if (content) setState({ todos: [newTodo, ...state.todos] });
 };
 
-const toggleToDo = ({ target }) => {
+// remove todo
+const removeTodo = ({ target }) => {
+  if (!target.classList.contains('destroy')) return;
+
+  const { id } = target.closest('li').dataset;
+
+  setState({ todos: state.todos.filter(todo => todo.id !== +id) });
+};
+
+// filter todo
+const filterTodo = ({ target }) => {
+  if (!target.matches('.filters > li > a')) return;
+
+  getDOM('.selected').classList.remove('selected');
+  target.classList.add('selected');
+
+  setState({ filterId: target.id });
+};
+
+// toggle todo
+const toggleTodo = ({ target }) => {
   if (!target.classList.contains('toggle')) return;
 
   const { id } = target.closest('li').dataset;
@@ -80,57 +101,46 @@ const toggleToDo = ({ target }) => {
   });
 };
 
-const removeToDo = ({ target }) => {
-  if (!target.classList.contains('destroy')) return;
-
-  const { id } = target.closest('li').dataset;
-
-  setState({ todos: state.todos.filter(todo => todo.id !== +id) });
-};
-
-const filterToDo = ({ target }) => {
-  if (!target.matches('a')) return;
-
-  getDOM('.selected').classList.remove('selected');
-  target.classList.add('selected');
-
-  setState({ filterId: target.id });
-};
-
-const toggleAllToDo = ({ target }) => {
+// toggle all todos
+const toggleAllTodos = ({ target }) => {
   if (!target.classList.contains('toggle-all')) return;
 
-  const isChecked = target.checked;
-
-  setState({ todos: state.todos.map(todo => ({ ...todo, completed: isChecked })) });
+  setState({ todos: state.todos.map(todo => ({ ...todo, completed: target.checked })) });
 };
 
-const editToDo = ({ target }) => {
+// edit todo
+const editTodo = ({ target }) => {
   if (!target.closest('li')) return;
-
-  target.closest('li').classList.toggle('editing');
-};
-
-const renewToDo = ({ target, key }) => {
-  if (key !== 'Enter') return;
 
   const { id } = target.closest('li').dataset;
 
-  const content = target.value.trim();
+  if (state.editingTodos.includes(id)) return
+
+  setState({ editingTodos: [...state.editingTodos, +id] });
+};
+
+// renew todo
+const renewTodo = ({ target, key }) => {
+  if (key !== 'Enter' || !target.classList.contains('edit')) return;
+
+  const { id } = target.closest('li').dataset;
+
+  const newContent = target.value.trim();
 
   setState({
-    todos: state.todos.map(todo => (todo.id === +id && content ? { ...todo, content: target.value } : todo)),
+    todos: state.todos.map(todo => (todo.id === +id && newContent ? { ...todo, content: target.value } : todo)),
+    editingTodos: state.editingTodos.filter(_id => _id !== +id),
   });
 };
 
-const clearTodo = () => setState({ todos: state.todos.filter(todo => todo.completed === false) });
+const clearCompletedTodos = () => setState({ todos: state.todos.filter(todo => todo.completed === false) });
 
-window.addEventListener('DOMContentLoaded', () => setState({ todos: getToDos() }));
-$newInput.addEventListener('keyup', addToDo);
-$todoList.addEventListener('click', toggleToDo);
-$todoList.addEventListener('click', removeToDo);
-$filters.addEventListener('click', filterToDo);
-$toggleAll.addEventListener('click', toggleAllToDo);
-$todoList.addEventListener('dblclick', editToDo);
-$todoList.addEventListener('keyup', renewToDo);
-$clearBtn.addEventListener('click', clearTodo);
+window.addEventListener('DOMContentLoaded', getTodos);
+$newInput.addEventListener('keyup', addTodo);
+$todoList.addEventListener('click', toggleTodo);
+$todoList.addEventListener('click', removeTodo);
+$filters.addEventListener('click', filterTodo);
+$toggleAll.addEventListener('click', toggleAllTodos);
+$todoList.addEventListener('dblclick', editTodo);
+$todoList.addEventListener('keyup', renewTodo);
+$clearBtn.addEventListener('click', clearCompletedTodos);
