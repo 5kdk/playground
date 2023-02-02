@@ -5,7 +5,6 @@ const $root = document.getElementById('root');
 let state = {
   todos: [],
   editingTodos: [],
-  iputNewTodoValue: '',
   filterId: 'all',
   isCheckedToggleAll: true,
 };
@@ -30,7 +29,7 @@ const render = () => {
         <h1>todos</h1>
         <input class="new-todo" placeholder="What needs to be done?" autofocus />
       </header>
-      <section class="main" ${todos.length ? '' : 'hidden'}>
+      <section class="main ${todos.length ? '' : 'hidden'}">
         <input type="checkbox" id="toggle-all" class="toggle-all" ${isCheckedToggleAll ? '' : 'checked'} />
         <label for="toggle-all">Mark all as complete</label>
         <ul class="todo-list">
