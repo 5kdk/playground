@@ -1,0 +1,30 @@
+GET http://localhost:9999/api/todos
+
+###
+
+POST http://localhost:9999/api/todos
+content-type: application/json
+
+{ "id": 4, "content": "React", "completed": false }
+
+###
+
+PATCH http://localhost:9999/api/todos/4
+content-type: application/json
+
+{ "completed": true }
+
+###
+
+PATCH http://localhost:9999/api/todos
+content-type: application/json
+
+{ "completed": true }
+
+###
+
+DELETE  http://localhost:9999/api/todos/4
+
+###
+
+DELETE http://localhost:9999/api/todos?completed=false
