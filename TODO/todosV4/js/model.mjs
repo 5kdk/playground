@@ -94,16 +94,8 @@ const changeInputNewTodoValue = value => {
   setState({ inputNewTodoValue: value });
 };
 
-// set focus
-const setFocusTo = $inputField => {
-  const { length } = $inputField.value;
-  $inputField.focus();
-  $inputField.setSelectionRange(length, length);
-};
-
 export {
   state,
-  setState,
   getTodos,
   addTodo,
   toggleTodo,
@@ -114,5 +106,4 @@ export {
   updateTodos,
   clearCompletedTodos,
   changeInputNewTodoValue,
-  setFocusTo,
 };

@@ -1,17 +1,28 @@
+import {
+  state,
+  getTodos,
+  addTodo,
+  toggleTodo,
+  removeTodo,
+  filterTodos,
+  toggleAllTodos,
+  editTodos,
+  updateTodos,
+  clearCompletedTodos,
+  changeInputNewTodoValue,
 // eslint-disable-next-line import/extensions
-import * as model from './model.mjs';
+} from './model.mjs';
 
 const $root = document.getElementById('root');
 
-window.addEventListener('DOMContentLoaded', model.getTodos);
+// set focus
+const setFocusTo = $inputField => {
+  const { length } = $inputField.value;
+  $inputField.focus();
+  $inputField.setSelectionRange(length, length);
+};
 
-$root.addEventListener('change', e => {
-  if (e.isComposing || e.keyCode === 229) return;
-  if (e.key !== 'Enter' || !e.target.matches('.new-todo')) return;
-
-  model.changeInputNewTodoValue(e.target.value);
-  model.setFocusTo(document.querySelector('.new-todo'));
-});
+window.addEventListener('DOMContentLoaded', getTodos);
 
 // add todo
 $root.addEventListener('keydown', e => {
@@ -21,8 +32,8 @@ $root.addEventListener('keydown', e => {
   const content = e.target.value.trim();
 
   if (content) {
-    model.addTodo(content);
-    model.setFocusTo(document.querySelector('.new-todo'));
+    addTodo(content);
+    setFocusTo(document.querySelector('.new-todo'));
   }
 });
 
@@ -30,61 +41,72 @@ $root.addEventListener('keydown', e => {
 $root.addEventListener('input', e => {
   if (!e.target.classList.contains('toggle')) return;
 
-  model.toggleTodo(e.target.closest('li').dataset.id);
-  model.setFocusTo(document.querySelector('.new-todo'));
+  toggleTodo(e.target.closest('li').dataset.id);
+  setFocusTo(document.querySelector('.new-todo'));
 });
 
 // remove todo
 $root.addEventListener('click', e => {
   if (!e.target.classList.contains('destroy')) return;
 
-  model.removeTodo(e.target.closest('li').dataset.id);
-  model.setFocusTo(document.querySelector('.new-todo'));
+  removeTodo(e.target.closest('li').dataset.id);
+  setFocusTo(document.querySelector('.new-todo'));
 });
 
 // filter todos
 $root.addEventListener('click', e => {
   if (!e.target.matches('.filters > li > a')) return;
 
-  model.filterTodos(e.target.id);
-  model.setFocusTo(document.querySelector('.new-todo'));
+  filterTodos(e.target.id);
+  setFocusTo(document.querySelector('.new-todo'));
 });
 
 // toggle all todos
 $root.addEventListener('click', e => {
   if (!e.target.classList.contains('toggle-all')) return;
 
-  model.toggleAllTodos();
-  model.setFocusTo(document.querySelector('.new-todo'));
+  toggleAllTodos();
+  setFocusTo(document.querySelector('.new-todo'));
 });
 
-// edit mod
+// edit todo
 $root.addEventListener('dblclick', e => {
   if (!e.target.matches('.view > label')) return;
 
   const { id } = e.target.closest('li').dataset;
 
-  model.editTodos(id);
-  model.setFocusTo(document.querySelector(`.todo-list > li[data-id="${id}"] > .edit`));
+  editTodos(id);
+  setFocusTo(document.querySelector(`.todo-list > li[data-id="${id}"] > .edit`));
 });
 
+// set focus todo
 $root.addEventListener('keydown', e => {
   if (e.isComposing || e.keyCode === 229) return;
   if (e.key !== 'Enter' || !e.target.classList.contains('edit')) return;
 
-  model.updateTodos(e.target.value, e.target.closest('li').dataset.id);
+  updateTodos(e.target.value, e.target.closest('li').dataset.id);
 
-  if (model.model.state.editingTodos.length === 0) {
-    model.setFocusTo(document.querySelector('.new-todo'));
+  if (state.editingTodos.length === 0) {
+    setFocusTo(document.querySelector('.new-todo'));
   } else {
-    const id = model.state.editingTodos.at(-1);
-    model.setFocusTo(document.querySelector(`.todo-list > li[data-id="${id}"] > .edit`));
+    const id = state.editingTodos.at(-1);
+    setFocusTo(document.querySelector(`.todo-list > li[data-id="${id}"] > .edit`));
   }
 });
 
+// clear completed todos
 $root.addEventListener('click', e => {
   if (!e.target.classList.contains('clear-completed')) return;
 
-  model.clearCompletedTodos();
-  model.setFocusTo(document.querySelector('.new-todo'));
+  clearCompletedTodos();
+  setFocusTo(document.querySelector('.new-todo'));
+});
+
+// change input new todo value
+$root.addEventListener('change', e => {
+  if (e.isComposing || e.keyCode === 229) return;
+  if (e.key !== 'Enter' || !e.target.matches('.new-todo')) return;
+
+  changeInputNewTodoValue(e.target.value);
+  setFocusTo(document.querySelector('.new-todo'));
 });
