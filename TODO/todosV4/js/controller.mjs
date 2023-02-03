@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/extensions
 import * as model from './model.mjs';
-// eslint-disable-next-line import/extensions
-import { $root } from './view.mjs';
+
+const $root = document.getElementById('root');
 
 window.addEventListener('DOMContentLoaded', model.getTodos);
 
@@ -88,5 +88,3 @@ $root.addEventListener('click', e => {
   model.clearCompletedTodos();
   model.setFocusTo(document.querySelector('.new-todo'));
 });
-
-export default $root;
