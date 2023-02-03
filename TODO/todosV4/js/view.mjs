@@ -1,7 +1,7 @@
-// eslint-disable-next-line import/extensions
-import $root from './controller.mjs'
+export const $root = document.getElementById('root')
 
 const render = state => {
+  // eslint-disable-next-line
   console.log('[state]', state);
   const { todos, editingTodos, filterId, isCheckedToggleAll, inputNewTodoValue } = state;
   const filterIds = ['All', 'Active', 'Completed'];
@@ -54,4 +54,4 @@ const render = state => {
   $root.innerHTML = inner;
 };
 
-export default render;
+export default render
