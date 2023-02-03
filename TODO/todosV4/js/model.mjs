@@ -27,10 +27,7 @@ const getTodos = () => {
 };
 
 // generate id
-// prettier-ignore
-function generateId() {
-  return Math.max(...state.todos.map(todo => todo.id), 0) + 1;
-}
+const generateId = () => Math.max(...state.todos.map(todo => todo.id), 0) + 1;
 
 // add todo
 const addTodo = content => {
