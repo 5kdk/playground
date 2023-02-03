@@ -1,10 +1,10 @@
-export const $root = document.getElementById('root')
+const $root = document.getElementById('root');
+const filterIds = ['All', 'Active', 'Completed'];
 
 const render = state => {
   // eslint-disable-next-line
   console.log('[state]', state);
   const { todos, editingTodos, filterId, isCheckedToggleAll, inputNewTodoValue } = state;
-  const filterIds = ['All', 'Active', 'Completed'];
 
   const cntActive = todos.filter(todo => !todo.completed).length;
   const cntCompleted = todos.filter(todo => todo.completed).length;
@@ -54,4 +54,4 @@ const render = state => {
   $root.innerHTML = inner;
 };
 
-export default render
+export default render;
