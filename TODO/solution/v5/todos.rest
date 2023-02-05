@@ -1,0 +1,29 @@
+GET http://localhost:8888/todos
+
+###
+
+POST http://localhost:8888/todos
+content-type: application/json
+
+{ "id": 4, "content": "React", "completed": false}
+
+###
+
+PATCH http://localhost:8888/todos
+content-type: application/json
+
+{ "completed": true}
+
+###
+
+PATCH http://localhost:8888/todos/2
+content-type: application/json
+
+{ "completed": true}
+
+###
+
+DELETE http://localhost:8888/todos/3
+
+###
+DELETE http://localhost:8888/todos?completed=true
