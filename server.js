@@ -11,8 +11,8 @@ let todos = [
 ];
 
 // app.use(express.static('./Todo/todosV5/publicXML'));
-app.use(express.static('./Todo/todosV5/publicPromise'));
-// app.use(express.static('./Todo/todosV5/publicAsyncAwait'));
+// app.use(express.static('./Todo/todosV5/publicPromise'));
+app.use(express.static('./Todo/todosV5/publicAsyncAwait'));
 // app.use(express.static('./Todo/todosV5/publicAxios'));
 app.use(express.json());
 
